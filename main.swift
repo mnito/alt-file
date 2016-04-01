@@ -1,1 +1,1 @@
-fileInfo("main.swift")
+print(fileInfo("main.swift"))

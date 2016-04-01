@@ -37,7 +37,5 @@ func fileInfo(path: String) -> fileInfoStruct
     fInfo.rDeviceId = Int(buffer.st_rdev)
     fInfo.blockSize = buffer.st_blksize
     fInfo.blocks = buffer.st_blocks
-    print(fInfo) 
     return fInfo
 }
-

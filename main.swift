@@ -1,0 +1,1 @@
+fileInfo("main.swift")

@@ -4,8 +4,7 @@
     import Glibc
 #endif
 
-struct fileInfoStruct
-{
+struct fileInfoStruct {
     var size : Int = 0
     var lastAccessTime : Int = 0
     var lastModificationTime : Int = 0
@@ -19,8 +18,7 @@ struct fileInfoStruct
     var blocks: Int = 0
 }
 
-func fileInfo(path: String) -> fileInfoStruct
-{
+func fileInfo(path: String) -> fileInfoStruct {
     var fInfo = fileInfoStruct()
     var buffer =  stat()
     if stat(path, &buffer) != 0 {
@@ -39,3 +37,57 @@ func fileInfo(path: String) -> fileInfoStruct
     fInfo.blocks = buffer.st_blocks
     return fInfo
 }
+
+func fileExists(path: String) -> Bool {
+    var buffer = stat()
+    return stat(path, &buffer) == 0
+}
+
+/*
+struct DirectoryGenerator : GeneratorType {
+
+    mutating func next() -> String? {
+        
+    }
+
+struct Directory : SequenceType
+{
+    var path : String
+
+    init(path: String) {
+        self.path = path
+    }
+
+    func generate() -> GeneratorType {
+    }
+}
+*/
+
+struct DirectoryEntry
+{
+    enum FileType { case File, Directory, Unknown }
+    var name : String = ""
+    var type : FileType = FileType.Unknown
+}
+
+func listDirectory(path: String) -> [String]? {
+    var directory = [String]()
+    let dp = opendir(path)
+    if (dp == nil) {
+        return nil
+    }
+    while(true) {
+       let ep = readdir(dp)
+       if (ep == nil) { break; }
+       let file = withUnsafePointer(&ep.memory.d_name) {
+           String.fromCString(UnsafePointer($0)) 
+       }
+       print(file)
+       if let fileName = file {
+            directory.append(fileName)
+       }
+    }
+    closedir(dp)
+    return directory
+}
+

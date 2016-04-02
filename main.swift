@@ -22,8 +22,10 @@ if isDirectory(file) {
 
 print("-----------------------------------------")
 
-var dir = Directory(path: ".")
+if isDirectory(file) {
+    var dir = Directory(path: file)
 
-for file in dir {
-   print(file)
+    for entry in dir {
+       print(entry.name + " : " + String(entry.type))
+    }
 }

@@ -24,6 +24,17 @@ func isFile(path: String) -> Bool
     return opendir(path) == nil
 }
 
+private func parseType(dtype: Int) -> DirectoryEntry.FileType
+{
+    var type = DirectoryEntry.FileType.Unknown
+    switch(dtype) {
+        case DT_REG : type = DirectoryEntry.FileType.Regular
+        case DT_DIR : type = DirectoryEntry.FileType.Directory
+        default : type = DirectoryEntry.FileType.Unknown
+    }
+    return type
+}
+
 private func toEntry(ep: UnsafeMutablePointer<dirent>) -> DirectoryEntry? {
     let file = withUnsafePointer(&ep.memory.d_name) {
         String.fromCString(UnsafePointer($0))
@@ -34,13 +45,7 @@ private func toEntry(ep: UnsafeMutablePointer<dirent>) -> DirectoryEntry? {
     }
     var entry = DirectoryEntry()
     entry.name = fileName
-    var type = DirectoryEntry.FileType.Unknown
-    if Int(dtype) == Int(DT_REG) {
-        type = DirectoryEntry.FileType.Regular
-    } else if Int(dtype) == Int(DT_DIR) {
-        type = DirectoryEntry.FileType.Directory
-    }
-    entry.type = type
+    entry.type = parseType(Int(dtype))
     return entry
 }
 

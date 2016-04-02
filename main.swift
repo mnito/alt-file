@@ -1,10 +1,28 @@
-//print(fileExists(Process.arguments[1]))
-//print(fileInfo(Process.arguments[1]))
+#if os(OSX) || os(iOS) || os(watchOS) || os(tvOS)
+    import Darwin
+#else
+    import Glibc
+#endif
 
-/* var x = Directory()
-for i in x
-{
+/*
+guard Process.arguments.count > 1 else {
+    print("Enter a file as an argument.")
+    exit(0)
+}
+
+let file = Process.arguments[1]
+
+if isDirectory(file) {
+    print(listDirectory(file)!)
+} else if(fileExists(file)) {
+    print(fileInfo(file))
+} else {
+    print("File does not exist.")
 }
 */
 
-print(listDirectory("."));
+var dir = Directory(path: ".")
+
+for file in dir {
+   print(file)
+}

@@ -4,7 +4,7 @@
     import Glibc
 #endif
 
-/*
+
 guard Process.arguments.count > 1 else {
     print("Enter a file as an argument.")
     exit(0)
@@ -19,7 +19,8 @@ if isDirectory(file) {
 } else {
     print("File does not exist.")
 }
-*/
+
+print("-----------------------------------------")
 
 var dir = Directory(path: ".")
 

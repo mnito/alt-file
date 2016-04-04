@@ -6,7 +6,6 @@
 
 struct DirectoryEntry
 {
-    enum FileType { case Regular, Directory, Unknown }
     var name : String = ""
     var type : FileType = FileType.Unknown
     func isDot() -> Bool {
@@ -24,13 +23,18 @@ func isFile(path: String) -> Bool
     return opendir(path) == nil
 }
 
-private func parseType(dtype: Int) -> DirectoryEntry.FileType
+private func parseType(dtype: Int) -> FileType
 {
-    var type = DirectoryEntry.FileType.Unknown
+    var type = FileType.Unknown
     switch(dtype) {
-        case DT_REG : type = DirectoryEntry.FileType.Regular
-        case DT_DIR : type = DirectoryEntry.FileType.Directory
-        default : type = DirectoryEntry.FileType.Unknown
+        case DT_REG : type = FileType.Regular
+        case DT_DIR : type = FileType.Directory
+        case DT_BLK : type = FileType.BlockDevice
+        case DT_CHR : type = FileType.CharacterDevice
+        case DT_LNK : type = FileType.Symlink
+        case DT_SOCK : type = FileType.Socket
+        case DT_FIFO : type = FileType.Pipe
+        default : type = FileType.Unknown
     }
     return type
 }

@@ -9,12 +9,13 @@ typealias Byte = UInt8
 func fileGetBytes(path: String) -> [Byte]? {
     var bytes = [Byte]()
     let fp = fopen(path, "rb")
-    guard fp != nil else { 
-        return nil 
+    guard fp != nil else {
+        return nil
     }
     while(true) {
         let c = fgetc(fp)
         guard c != -1 else {
+            fclose(fp)
             break
         }
         bytes.append(Byte(c))
@@ -32,6 +33,20 @@ func filePutBytes(path: String, contents: [Byte]) -> Int {
     }
     fclose(fp)
     return contents.count
+}
+
+func filePutBytes(path: String, contents: ByteReader) -> Int {
+    let fp = fopen(path, "w")
+    guard fp != nil else {
+        return -1
+    }
+    var i = 0
+    for c in contents {
+        fputc(Int32(c), fp)
+        i += 1
+    }
+    fclose(fp)
+    return i
 }
 
 func fileGetContents(path: String) -> String? {
@@ -86,8 +101,7 @@ struct FileGenerator<String> : GeneratorType {
     }
 }
 
-struct File : SequenceType
-{
+struct File : SequenceType {
     let path : String
 
     init(path: String) {
@@ -103,3 +117,40 @@ struct File : SequenceType
         return FileGenerator(fp: fp)
     }
 }
+
+struct ByteGenerator<Byte> : GeneratorType {
+
+    let fp : UnsafeMutablePointer<FILE>
+
+    init(fp: UnsafeMutablePointer<FILE>) {
+        self.fp = fp
+    }
+
+    mutating func next() -> Byte? {
+        if fp == nil { return nil }
+        let c = fgetc(fp)
+        guard c != -1 else {
+            fclose(fp)
+            return nil
+        }
+        return UInt8(c) as? Byte
+    }
+}
+
+struct ByteReader : SequenceType {
+    let path : String
+
+    init(path: String) {
+        self.path = path
+    }
+
+    init(path: String, maxLineLength: Int) {
+        self.path = path
+    }
+
+    func generate() -> ByteGenerator<Byte> {
+        let fp = fopen(path, "rb")
+        return ByteGenerator(fp: fp)
+    }
+}
+

@@ -28,6 +28,7 @@ if isDirectory(file) {
        print(entry.name + " : " + String(entry.type))
     }
 } else if(fileExists(file)) {
-    var lines = File(path: file, maxLineLength: 0)
-    for line in lines { print(line, terminator: "") }
+    var bytes = ByteReader(path: file)
+    for byte in bytes { print(byte, terminator: "") }
+    filePutBytes("test.file", contents: bytes)
 }

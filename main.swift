@@ -32,3 +32,14 @@ if isDirectory(file) {
     for byte in bytes { print(byte, terminator: "") }
     filePutBytes("test.file", contents: bytes)
 }
+
+print("------------------------------------------")
+let writer = ByteWriter(path: "cool2.test")
+
+print(writer.write(65))
+print(writer.write([65,66,67,68]))
+
+let writer2 = LineWriter(path: "/dev/stdout")
+writer2.write("hey")
+writer2.write("yo")
+

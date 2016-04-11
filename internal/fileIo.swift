@@ -35,6 +35,10 @@ func filePutBytes(path: String, contents: [Byte]) -> Int {
     return contents.count
 }
 
+func touch(path: String) -> Bool {
+  return filePutBytes(path, contents: []) != -1
+}
+
 func filePutBytes(path: String, contents: ByteReader) -> Int {
     let fp = fopen(path, "w")
     guard fp != nil else {
@@ -50,7 +54,7 @@ func filePutBytes(path: String, contents: ByteReader) -> Int {
 }
 
 func fileGetContents(path: String) -> String? {
-    let file = File(path: path)
+    let file = LineReader(path: path)
     var str = ""
     for line in file {
         str += line
@@ -61,8 +65,7 @@ func fileGetContents(path: String) -> String? {
     return str
 }
 
-func filePutContents(path: String, contents: String) -> Int
-{
+func filePutContents(path: String, contents: String) -> Int {
     let fp = fopen(path, "w")
     guard fp != nil else {
         return -1
@@ -72,7 +75,7 @@ func filePutContents(path: String, contents: String) -> Int
     return contents.characters.count
 }
 
-func readLine(fp: UnsafeMutablePointer<FILE>) -> String? {
+private func readLine(fp: UnsafeMutablePointer<FILE>) -> String? {
     var buffer: UnsafeMutablePointer<Int8> = nil
     var temp = 0
     if(getline(&buffer, &temp, fp) == -1) {
@@ -83,7 +86,7 @@ func readLine(fp: UnsafeMutablePointer<FILE>) -> String? {
     return str
 }
 
-struct FileGenerator<String> : GeneratorType {
+struct LineGenerator<String> : GeneratorType {
 
     let fp : UnsafeMutablePointer<FILE>
 
@@ -101,7 +104,7 @@ struct FileGenerator<String> : GeneratorType {
     }
 }
 
-struct File : SequenceType {
+struct LineReader : SequenceType {
     let path : String
 
     init(path: String) {
@@ -112,9 +115,9 @@ struct File : SequenceType {
         self.path = path
     }
 
-    func generate() -> FileGenerator<String> {
+    func generate() -> LineGenerator<String> {
         let fp = fopen(path, "r")
-        return FileGenerator(fp: fp)
+        return LineGenerator(fp: fp)
     }
 }
 
@@ -154,3 +157,54 @@ struct ByteReader : SequenceType {
     }
 }
 
+public struct ByteWriter {
+  private var fp: UnsafeMutablePointer<FILE>
+
+  init(path: String) {
+    fp = fopen(path, "a")
+  }
+
+  func write(byte: Byte) -> Int {
+    return Int(fputc(Int32(byte), fp))
+  }
+
+  func write(bytes: [Byte]) -> Int {
+    var written = 0
+    for byte in bytes {
+      let c = write(byte)
+      guard c >= 0 else {
+        break
+      }
+      written += 1
+    }
+    return written
+  }
+
+  func toStart() {
+    rewind(fp)
+  }
+
+  func close() {
+    fclose(fp)
+  }
+}
+
+public struct LineWriter {
+  private var fp: UnsafeMutablePointer<FILE>
+  
+  init(path: String) {
+    fp = fopen(path, "a")
+  }
+
+  func write(content: String) -> Int {
+    return Int(fputs(content + "\n", fp))
+  }
+
+  func toStart() {
+    rewind(fp)
+  }
+
+  func close() {
+    fclose(fp)
+  }
+}

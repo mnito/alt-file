@@ -4,7 +4,7 @@
     import Glibc
 #endif
 
-struct FileInfoStruct {
+public struct FileInfo {
     var size : Int = 0
     var type : FileType = FileType.Unknown
     var permissions : FilePermissions = FilePermissions()
@@ -20,7 +20,7 @@ struct FileInfoStruct {
     var blocks: Int = 0
 }
 
-enum FileType { 
+public enum FileType { 
     case Regular 
     case Directory
     case BlockDevice
@@ -31,8 +31,7 @@ enum FileType {
     case Unknown 
 }
 
-struct FilePermissions
-{
+public struct FilePermissions {
     var read : Bool = false
     var write : Bool = false
     var execute : Bool = false
@@ -62,8 +61,8 @@ func filePermissions(path: String) -> FilePermissions
     return fPerm
 }
 
-func fileInfo(path: String) -> FileInfoStruct {
-    var fInfo = FileInfoStruct()
+func fileInfo(path: String) -> FileInfo {
+    var fInfo = FileInfo()
     var buffer =  stat()
     if stat(path, &buffer) != 0 {
         return fInfo

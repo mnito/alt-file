@@ -5,7 +5,6 @@
 #endif
 
 public struct DirectoryEntry {
-
   public var name : String = ""
   public var type : FileType = FileType.Unknown
 

@@ -34,7 +34,6 @@ internal func toEntry(ep: UnsafeMutablePointer<dirent>) -> DirectoryEntry? {
 }
 
 public struct DirectoryGenerator<DirectoryEntry> : GeneratorType {
-
   let dp : COpaquePointer
 
   init(dp: COpaquePointer) {
@@ -53,7 +52,6 @@ public struct DirectoryGenerator<DirectoryEntry> : GeneratorType {
 }
 
 public struct DirectoryList : SequenceType {
-
   let path : String
 
   init(path: String) {

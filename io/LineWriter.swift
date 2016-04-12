@@ -5,7 +5,6 @@
 #endif
 
 public struct LineWriter {
-
   private var fp: UnsafeMutablePointer<FILE>
 
   init(path: String) {

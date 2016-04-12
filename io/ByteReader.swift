@@ -5,7 +5,6 @@
 #endif
 
 public struct ByteGenerator<Byte> : GeneratorType {
-
   let fp : UnsafeMutablePointer<FILE>
 
   init(fp: UnsafeMutablePointer<FILE>) {
@@ -24,7 +23,6 @@ public struct ByteGenerator<Byte> : GeneratorType {
 }
 
 public struct ByteReader : SequenceType {
-
   let path : String
 
   init(path: String) {

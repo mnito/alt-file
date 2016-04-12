@@ -16,7 +16,6 @@ private func readLine(fp: UnsafeMutablePointer<FILE>) -> String? {
 }
 
 public struct LineGenerator<String> : GeneratorType {
-
   let fp : UnsafeMutablePointer<FILE>
 
   init(fp: UnsafeMutablePointer<FILE>) {

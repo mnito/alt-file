@@ -4,6 +4,7 @@
     import Glibc
 #endif
 
+//Testing
 
 guard Process.arguments.count > 1 else {
     print("Enter a file as an argument.")

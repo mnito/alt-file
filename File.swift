@@ -1,3 +1,5 @@
+/*IN PROGRESS*/
+
 enum FileError: ErrorType {
   case Inaccessible(path: String)
 }

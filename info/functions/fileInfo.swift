@@ -4,39 +4,6 @@
   import Glibc
 #endif
 
-public struct FileInfo {
-  var size : Int = 0
-  var type : FileType = FileType.Unknown
-  var permissions : FilePermissions = FilePermissions()
-  var lastAccessTime : Int = 0
-  var lastModificationTime : Int = 0
-  var lastChangeTime : Int = 0
-  var numLinks: Int = 0
-  var deviceId: Int = 0
-  var userId: Int = 0
-  var groupId: Int = 0
-  var rDeviceId: Int = 0
-  var blockSize: Int = 0
-  var blocks: Int = 0
-}
-
-public enum FileType {
-  case Regular
-  case Directory
-  case BlockDevice
-  case CharacterDevice
-  case Symlink
-  case Socket
-  case Pipe
-  case Unknown
-}
-
-public struct FilePermissions {
-  var read : Bool = false
-  var write : Bool = false
-  var execute : Bool = false
-}
-
 private func parseFileType(st_mode: UInt32) -> FileType {
   var type = FileType.Unknown
   switch(st_mode & S_IFMT) {
@@ -49,19 +16,10 @@ private func parseFileType(st_mode: UInt32) -> FileType {
     case S_IFIFO : type = FileType.Pipe
     default : type = FileType.Unknown
     }
-    return type
+  return type
 }
 
-func filePermissions(path: String) -> FilePermissions
-{
-  var fPerm = FilePermissions()
-  if(access(path, R_OK) == 0) { fPerm.read = true }
-  if(access(path, W_OK) == 0) { fPerm.write = true }
-  if(access(path, X_OK) == 0) { fPerm.read = true }
-  return fPerm
-}
-
-func fileInfo(path: String) -> FileInfo {
+public func fileInfo(path: String) -> FileInfo {
   var fInfo = FileInfo()
   var buffer =  stat()
   if stat(path, &buffer) != 0 {
@@ -81,8 +39,4 @@ func fileInfo(path: String) -> FileInfo {
   fInfo.blockSize = buffer.st_blksize
   fInfo.blocks = buffer.st_blocks
   return fInfo
-}
-
-func fileExists(path: String) -> Bool {
-  return access(path, F_OK) == 0
 }

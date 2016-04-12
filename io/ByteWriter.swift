@@ -5,17 +5,18 @@
 #endif
 
 public struct ByteWriter {
+
   private var fp: UnsafeMutablePointer<FILE>
 
   init(path: String) {
     fp = fopen(path, "a")
   }
 
-  func write(byte: Byte) -> Int {
+  public func write(byte: Byte) -> Int {
     return Int(fputc(Int32(byte), fp))
   }
 
-  func write(bytes: [Byte]) -> Int {
+  public func write(bytes: [Byte]) -> Int {
     var written = 0
     for byte in bytes {
       let c = write(byte)
@@ -27,11 +28,11 @@ public struct ByteWriter {
     return written
   }
 
-  func toStart() {
+  public func toStart() {
     rewind(fp)
   }
 
-  func close() {
+  public func close() {
     fclose(fp)
   }
 }

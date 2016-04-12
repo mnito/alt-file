@@ -23,7 +23,7 @@ if isDirectory(file) {
 print("-----------------------------------------")
 
 if isDirectory(file) {
-    var dir = Directory(path: file)
+    var dir = DirectoryList(path: file)
     for entry in dir {
        print(entry.name + " : " + String(entry.type))
     }
@@ -42,4 +42,3 @@ print(writer.write([65,66,67,68]))
 let writer2 = LineWriter(path: "/dev/stdout")
 writer2.write("hey")
 writer2.write("yo")
-

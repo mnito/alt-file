@@ -8,7 +8,7 @@ public class File {
   public var permissions : FilePermissions
   private let lines : LineReader
   private let bytes : ByteReader
-  
+
   init(path: String) throws {
     if !fileExists(path) {
       guard touch(path) else {
@@ -25,7 +25,7 @@ public class File {
   func put(contents: String) -> Int {
     return filePutContents(path, contents: contents)
   }
-  
+
   func put(contents: [Byte]) -> Int {
     return filePutBytes(path, contents: contents)
   }

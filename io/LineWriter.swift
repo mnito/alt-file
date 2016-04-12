@@ -5,21 +5,22 @@
 #endif
 
 public struct LineWriter {
+
   private var fp: UnsafeMutablePointer<FILE>
 
   init(path: String) {
     fp = fopen(path, "a")
   }
 
-  func write(content: String) -> Int {
+  public func write(content: String) -> Int {
     return Int(fputs(content + "\n", fp))
   }
 
-  func toStart() {
+  public func toStart() {
     rewind(fp)
   }
 
-  func close() {
+  public func close() {
     fclose(fp)
   }
 }

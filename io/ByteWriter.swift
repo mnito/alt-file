@@ -5,7 +5,7 @@
 #endif
 
 public struct ByteWriter {
-  private var fp: UnsafeMutablePointer<FILE>
+  internal var fp: UnsafeMutablePointer<FILE>
 
   init(path: String) {
     fp = fopen(path, "a")

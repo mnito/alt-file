@@ -35,12 +35,12 @@ if isDirectory(file) {
 }
 
 print("------------------------------------------")
-
-var file2 = try File(path: "test/uc.test")
-
-var s = file2.nextLine()
-
-while(s != nil) {
-  print(s!, terminator: "")
-  s = file2.nextLine()
-}
+var reader = Reader(path: "test/uc.test")
+print(reader.nextLine()!)
+print(reader.nextLine()!)
+print(reader.nextByte()!)
+print(reader.nextByte()!)
+print(reader.nextByte()!)
+print(reader.nextByte()!)
+print(reader.nextByte()!)
+print(reader.nextLine()!)

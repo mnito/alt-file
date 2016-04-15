@@ -5,11 +5,11 @@ enum FileError: ErrorType {
 }
 
 public class File {
-  public let path : String
-  public var info : FileInfo
-  public var permissions : FilePermissions
-  private let lines : LineReader
-  private let bytes : ByteReader
+  public let path: String
+  public var info: FileInfo
+  public var permissions: FilePermissions
+  private var lineGenerator: LineGenerator<String>
+  private var byteGenerator: ByteGenerator<Byte>
 
   init(path: String) throws {
     if !fileExists(path) {
@@ -18,17 +18,35 @@ public class File {
       }
     }
     self.path = path
-    lines = LineReader(path: path)
-    bytes = ByteReader(path: path)
+    let lineReader = LineReader(path: path)
+    let byteReader = ByteReader(path: path)
+    lineGenerator = lineReader.generate()
+    byteGenerator = byteReader.generate()
     info = fileInfo(path)
     permissions = filePermissions(path)
   }
 
   func put(contents: String) -> Int {
-    return filePutContents(path, contents: contents)
+    return filePutString(path, contents: contents)
   }
 
   func put(contents: [Byte]) -> Int {
     return filePutBytes(path, contents: contents)
+  }
+
+  public var bytes: [Byte] {
+    return fileGetBytes(path)!
+  }
+
+  public var string: String {
+    return fileGetString(path)!
+  }
+
+  public func nextByte() -> Byte? {
+    return byteGenerator.next()
+  }
+
+  public func nextLine() -> String? {
+    return lineGenerator.next()
   }
 }

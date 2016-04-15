@@ -13,6 +13,21 @@ private func readLine(fp: UnsafeMutablePointer<FILE>) -> String? {
   let str = String.fromCString(buffer)
   free(buffer)
   return str
+  /*
+  var buffer: [Int8]
+  while(true) {
+    let c = fgetc(fp)
+    if(c == -1) {
+      return nil
+    }
+    let s = String(Character(UnicodeScalar(UInt32(c))))
+    line += s
+    if s == "\n" {
+      break
+    }
+  }
+  return line
+  */
 }
 
 public struct LineGenerator<String> : GeneratorType {

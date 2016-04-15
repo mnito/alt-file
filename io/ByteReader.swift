@@ -29,10 +29,6 @@ public struct ByteReader : SequenceType {
     self.path = path
   }
 
-  init(path: String, maxLineLength: Int) {
-      self.path = path
-  }
-
   public func generate() -> ByteGenerator<Byte> {
     let fp = fopen(path, "rb")
     return ByteGenerator(fp: fp)

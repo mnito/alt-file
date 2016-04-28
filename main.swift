@@ -41,3 +41,10 @@ var file2 = File(path: "test/uc.test")
 for line in file2.lines {
   print(line, terminator: "")
 }
+
+var current = Directory(path: ".")
+
+for file in current {
+  print(file.path)
+  print(file.string)
+}

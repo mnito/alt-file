@@ -1,8 +1,7 @@
 public class File {
   public let path: String
   public var info: FileInfo
-  public var permissions: FilePermissions
-  
+
   private var lineReader: LineReader?
   private var byteReader: ByteReader?
   private var _lineWriter: LineWriter?
@@ -35,7 +34,10 @@ public class File {
   }
 
   public var string: String {
-    return fileGetString(path)!
+    guard let str = fileGetString(path) else {
+      return ""
+    }
+    return str
   }
 
   init(path: String) {
@@ -44,7 +46,6 @@ public class File {
     }
     self.path = path
     info = fileInfo(path)
-    permissions = filePermissions(path)
   }
 
   public func put(contents: String) -> Int {

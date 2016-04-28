@@ -1,52 +1,65 @@
-/*IN PROGRESS*/
-
-enum FileError: ErrorType {
-  case Inaccessible(path: String)
-}
-
 public class File {
   public let path: String
   public var info: FileInfo
   public var permissions: FilePermissions
-  private var lineGenerator: LineGenerator<String>
-  private var byteGenerator: ByteGenerator<Byte>
+  
+  private var lineReader: LineReader?
+  private var byteReader: ByteReader?
+  private var _lineWriter: LineWriter?
+  private var _byteWriter: ByteWriter?
 
-  init(path: String) throws {
-    if !fileExists(path) {
-      guard touch(path) else {
-        throw FileError.Inaccessible(path: path)
-      }
+  public var lines: LineReader {
+    if(lineReader != nil) {
+      return lineReader!
     }
-    self.path = path
-    let lineReader = LineReader(path: path)
-    let byteReader = ByteReader(path: path)
-    lineGenerator = lineReader.generate()
-    byteGenerator = byteReader.generate()
-    info = fileInfo(path)
-    permissions = filePermissions(path)
+    let reader = LineReader(path: path)
+    lineReader = reader
+    return reader
   }
 
-  func put(contents: String) -> Int {
-    return filePutString(path, contents: contents)
+  public var bytes: ByteReader {
+    if(self.byteReader != nil) {
+      return byteReader!
+    }
+    let reader = ByteReader(path: path)
+    byteReader = reader
+    return reader
   }
 
-  func put(contents: [Byte]) -> Int {
-    return filePutBytes(path, contents: contents)
+  public var byteWriter: ByteWriter {
+    return ByteWriter(path: path)
   }
 
-  public var bytes: [Byte] {
-    return fileGetBytes(path)!
+  public var lineWriter: LineWriter {
+    return LineWriter(path: path)
   }
 
   public var string: String {
     return fileGetString(path)!
   }
 
-  public func nextByte() -> Byte? {
-    return byteGenerator.next()
+  init(path: String) {
+    if !fileExists(path) {
+      touch(path)
+    }
+    self.path = path
+    info = fileInfo(path)
+    permissions = filePermissions(path)
   }
 
-  public func nextLine() -> String? {
-    return lineGenerator.next()
+  public func put(contents: String) -> Int {
+    return filePutString(path, contents: contents)
+  }
+
+  public func put(bytes: [Byte]) -> Int {
+    return filePutBytes(path, contents: bytes)
+  }
+
+  public func get() -> String {
+    return string
+  }
+
+  public func getBytes() -> [Byte] {
+    return fileGetBytes(path)!
   }
 }

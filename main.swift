@@ -36,11 +36,8 @@ if isDirectory(file) {
 
 print("------------------------------------------")
 
-var file2 = try File(path: "test/uc.test")
+var file2 = File(path: "test/uc.test")
 
-var s = file2.nextLine()
-
-while(s != nil) {
-  print(s!, terminator: "")
-  s = file2.nextLine()
+for line in file2.lines {
+  print(line, terminator: "")
 }
